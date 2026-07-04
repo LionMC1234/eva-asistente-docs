@@ -4,7 +4,8 @@
 ### Autonomous Cognitive Operating System
 
 Building an autonomous cognitive operating system for natural voice interaction, reasoning, memory and intelligent task execution.
-*Implementation details intentionally omitted.*
+
+*Implementation details intentionally omitted. This repository contains the public architecture, documentation and development journey of EVA.*
 
 [![Status](https://img.shields.io/badge/status-pre--alpha-orange?style=flat-square)](https://eva-chatbot.xyz)
 [![Beta](https://img.shields.io/badge/beta-closed-blueviolet?style=flat-square)](https://eva-chatbot.xyz)
@@ -200,10 +201,10 @@ Watching the progression helps understand how EVA has matured over time.
 > **A heads-up before you watch:** these are unedited recordings from earlier stages of development — nothing here is staged. You'll see real bugs, crashes, and rough edges that have since been fixed. You'll also hear some humor that leans a bit heavy/dark at points; that's just how those sessions went, and it's left in rather than cut out. Take it as proof EVA was actually running live and doing real things. More recordings will be published soon.
 
 <!-- Update these titles if they don't match the actual content of each video -->
-- 🎬 [Demo — Session 1](https://www.youtube.com/watch?v=BTvkvvDcymc&t=722s)
-- 🎬 [Demo — Session 2](https://www.youtube.com/watch?v=npyZ3aW2aX8&t=7s)
-- 🎬 [Demo — Session 3](https://www.youtube.com/watch?v=bWXXYD858_M&t=3s)
-- 🆕 [Latest Demo](https://www.youtube.com/watch?v=mxGrBLIt1t0)
+- 🎬 [Demo — Session 1](https://www.youtube.com/watch?v=BTvkvvDcymc&t=723s)
+- 🎬 [Demo — Session 2](https://www.youtube.com/watch?v=npyZ3aW2aX8&t=11s)
+- 🎬 [Demo — Session 3](https://www.youtube.com/watch?v=bWXXYD858_M&t=6s)
+- 🆕 [Latest Demo](https://www.youtube.com/watch?v=mxGrBLIt1t0&t=2s)
 
 More videos coming soon.
 
