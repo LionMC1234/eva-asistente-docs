@@ -134,6 +134,23 @@ Signed, atomic over-the-air updates with automatic rollback. Fully isolated mult
 
 ---
 
+## Documentation
+
+Deeper write-ups on each part of the system, one file per subsystem:
+
+| Doc | Covers |
+|---|---|
+| [Cognitive Pipeline](docs/01_cognitive_pipeline.md) | How EVA moves from input to decision — the cognitive flow in detail |
+| [Reasoning System](docs/02_reasoning_system.md) | How EVA reasons, weighs options, and plans multi-step actions |
+| [Agent Network](docs/03_agent_network.md) | How specialized agents coordinate on complex tasks |
+| [Memory System](docs/04_memory_system.md) | How EVA remembers, from working memory to long-term semantic knowledge |
+| [Security & Trust](docs/05_security_trust.md) | The Zero-Trust model — how every action is verified before it runs |
+| [Continuous Learning](docs/06_continuous_learning.md) | How EVA learns and improves from real interactions over time |
+
+<!-- Assumes these six files live in a docs/ folder at the repo root — update the paths above if you place them elsewhere -->
+
+---
+
 ## The Journey of EVA
 
 EVA was not built overnight.
