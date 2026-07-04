@@ -3,7 +3,7 @@
 # ◯ EVA
 ### Autonomous Cognitive Operating System
 
-**Public Architecture — High-Level Overview**
+Building an autonomous cognitive operating system for natural voice interaction, reasoning, memory and intelligent task execution.
 *Implementation details intentionally omitted.*
 
 [![Status](https://img.shields.io/badge/status-pre--alpha-orange?style=flat-square)](https://eva-chatbot.xyz)
