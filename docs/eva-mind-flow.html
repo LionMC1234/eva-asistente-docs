@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVA — Cognitive Flow &amp; Mind Model</title>
+<meta name="description" content="Public, high-level visualization of how EVA thinks. Conceptual overview only — implementation details intentionally omitted.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500&display=swap');
+
+:root{
+  --bg-0:#05070d;
+  --bg-1:#0b0f1a;
+  --surface:#111726;
+  --surface-hover:#161c2c;
+  --border:#1f2937;
+  --spoke:#2a3344;
+  --text-primary:#e6e9f0;
+  --text-muted:#8b96ab;
+  --accent-cog:#8b7cf6;
+  --accent-voice:#4fb6e8;
+  --accent-glow:#c7bdfb;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  padding:56px 20px 80px;
+  background:radial-gradient(circle at 50% -10%, var(--bg-1), var(--bg-0) 60%);
+  color:var(--text-primary);
+  font-family:'Inter',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+.container{max-width:880px;margin:0 auto;}
+
+header.hero{text-align:center;margin-bottom:64px;}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+}
+h1{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:600;
+  font-size:clamp(28px,5vw,42px);
+  margin:12px 0 10px;
+}
+.subtitle{
+  color:var(--text-muted);
+  font-size:16px;
+  max-width:560px;
+  margin:0 auto 18px;
+  line-height:1.6;
+}
+.legend{
+  display:inline-block;
+  font-size:12px;
+  color:var(--text-muted);
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:7px 16px;
+  max-width:520px;
+  line-height:1.5;
+}
+
+section{margin-bottom:72px;}
+h2{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:600;
+  font-size:22px;
+  margin-bottom:8px;
+}
+.section-intro{
+  color:var(--text-muted);
+  font-size:14px;
+  margin-bottom:28px;
+  max-width:600px;
+  line-height:1.6;
+}
+
+.stage{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:20px;
+}
+svg{width:100%;height:auto;display:block;}
+
+.node{cursor:pointer;}
+.node .ring{fill:var(--surface);stroke:var(--border);stroke-width:1.5;transition:stroke .2s, fill .2s;}
+.node:hover .ring{stroke:var(--accent-voice);}
+.node.active .ring{stroke:var(--accent-cog);stroke-width:2.5;fill:var(--surface-hover);}
+.node .num{font-family:'JetBrains Mono',monospace;font-size:11px;fill:var(--text-muted);}
+.node .lbl{font-family:'Inter',sans-serif;font-weight:500;font-size:13px;fill:var(--text-primary);}
+.node:focus{outline:none;}
+.node:focus .ring{stroke:var(--accent-voice);}
+
+.spoke{stroke:var(--spoke);stroke-width:1.5;}
+.hub-ring{fill:var(--surface);stroke:var(--accent-cog);stroke-width:2;}
+.hub-lbl{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;fill:var(--text-primary);}
+.hub-sub{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;fill:var(--text-muted);}
+
+.center-lbl{font-family:'Space Grotesk',sans-serif;font-size:24px;fill:var(--accent-cog);}
+.center-sub{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;fill:var(--text-muted);}
+
+.pulse-dot{fill:var(--accent-glow);}
+
+.detail-panel{
+  margin-top:20px;
+  padding:18px 22px;
+  border-radius:14px;
+  background:var(--bg-1);
+  border:1px solid var(--border);
+  min-height:60px;
+}
+.detail-panel .d-title{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:600;
+  font-size:16px;
+  margin-bottom:6px;
+  color:var(--accent-glow);
+}
+.detail-panel .d-text{color:var(--text-muted);font-size:14px;line-height:1.6;}
+
+footer{
+  text-align:center;
+  color:var(--text-muted);
+  font-size:13px;
+  border-top:1px solid var(--border);
+  padding-top:28px;
+  line-height:1.8;
+}
+footer a{color:var(--accent-voice);text-decoration:none;}
+footer a:hover{text-decoration:underline;}
+
+@media (prefers-reduced-motion: reduce){
+  .pulse-dot animateMotion{ display:none; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="hero">
+    <div class="eyebrow">EVA — Public Overview</div>
+    <h1>How EVA thinks</h1>
+    <p class="subtitle">A conceptual visualization of EVA's cognitive flow and inner model — the same high-level layers described in the project README.</p>
+    <div class="legend">Public, high-level view only. Layer names here are conceptual and do not correspond 1:1 with internal module names or code structure.</div>
+  </header>
+
+  <section id="flow-section">
+    <h2>Cognitive flow</h2>
+    <p class="section-intro">Every interaction moves through the same eight stages, in a loop — each response feeds forward into the next cycle. Click any stage to see what happens there.</p>
+    <div class="stage">
+      <svg id="flow-svg" viewBox="0 0 800 800" role="img" aria-label="Diagram of EVA's eight-stage cognitive flow, arranged in a loop">
+        <title>EVA cognitive flow</title>
+        <desc>Eight stages arranged in a circular loop: perception, understanding, planning, reasoning, decision, execution, memory, response — each feeding into the next.</desc>
+      </svg>
+    </div>
+    <div class="detail-panel" id="flow-detail">
+      <div class="d-title">Select a stage</div>
+      <div class="d-text">Click any node above to read what happens at that stage.</div>
+    </div>
+  </section>
+
+  <section id="mind-section">
+    <h2>EVA mind — inner model</h2>
+    <p class="section-intro">Rather than a strict pipeline, EVA's cognition is organized as layers that work together around a common core. Click a layer to see its role.</p>
+    <div class="stage">
+      <svg id="mind-svg" viewBox="0 0 820 820" role="img" aria-label="Diagram of EVA's inner model, showing seven cognitive layers around a central core">
+        <title>EVA mind model</title>
+        <desc>A central core connected to seven cognitive layers: perception, understanding, reasoning, planning, decision, action, and memory and learning.</desc>
+      </svg>
+    </div>
+    <div class="detail-panel" id="mind-detail">
+      <div class="d-title">Select a layer</div>
+      <div class="d-text">Click any layer above to read its role.</div>
+    </div>
+  </section>
+
+  <footer>
+    <div><a href="../README.md">← Back to the EVA overview</a></div>
+    <div>Want to try it? <a href="https://eva-chatbot.xyz">Join the closed beta →</a></div>
+  </footer>
+
+</div>
+
+<script>
+const NS = "http://www.w3.org/2000/svg";
+
+function polar(cx, cy, r, angleDeg){
+  const a = angleDeg * Math.PI / 180;
+  return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+}
+
+function el(tag, attrs, text){
+  const e = document.createElementNS(NS, tag);
+  for(const k in attrs) e.setAttribute(k, attrs[k]);
+  if(text !== undefined) e.textContent = text;
+  return e;
+}
+
+function selectDetail(panelId, title, desc){
+  const panel = document.getElementById(panelId);
+  panel.innerHTML = '<div class="d-title">' + title + '</div><div class="d-text">' + desc + '</div>';
+}
+
+const flowSteps = [
+  { label:"Perception",    desc:"Collects signals from every input — voice, text, screen, camera, telemetry — and builds a picture of the current context." },
+  { label:"Understanding", desc:"Interprets what's actually being asked and reads the situation before jumping to a plan." },
+  { label:"Planning",      desc:"Breaks the goal into concrete steps and decides what needs to happen, and in what order." },
+  { label:"Reasoning",     desc:"Weighs different options, compares trade-offs, and predicts the likely outcome of each one." },
+  { label:"Decision",      desc:"Picks the safest, most reliable next step based on confidence and risk." },
+  { label:"Execution",     desc:"Carries out the plan — running tools, coordinating agents, taking action." },
+  { label:"Memory",        desc:"Stores what happened and connects it to what's already known, for next time." },
+  { label:"Response",      desc:"Answers back — in text, voice, or action — and the cycle feeds forward into the next one." }
+];
+
+const mindLayers = [
+  { label:"Perception",         desc:"Receives and interprets raw signals from the world." },
+  { label:"Understanding",      desc:"Turns data into meaning and detects intent." },
+  { label:"Reasoning",          desc:"Compares and evaluates possibilities logically." },
+  { label:"Planning",           desc:"Designs a strategy and organizes the steps to reach a goal." },
+  { label:"Decision",           desc:"Chooses the best, safest action given confidence and risk." },
+  { label:"Action",             desc:"Executes through tools, agents, and integrations." },
+  { label:"Memory & Learning",  desc:"Stores experience and continuously improves from it." }
+];
+
+function buildFlow(){
+  const svg = document.getElementById('flow-svg');
+  const cx = 400, cy = 400, R = 270, nodeR = 62;
+
+  const defs = el('defs', {});
+  const marker = el('marker', { id:'arrow', viewBox:'0 0 10 10', refX:'8', refY:'5', markerWidth:'6', markerHeight:'6', orient:'auto-start-reverse' });
+  marker.appendChild(el('path', { d:'M2 1L8 5L2 9', fill:'none', stroke:'#4b5568', 'stroke-width':'1.5', 'stroke-linecap':'round', 'stroke-linejoin':'round' }));
+  defs.appendChild(marker);
+  svg.appendChild(defs);
+
+  for(let i = 0; i < 8; i++){
+    const a1 = -90 + i * 45 + 13;
+    const a2 = -90 + (i + 1) * 45 - 13;
+    const p1 = polar(cx, cy, R, a1);
+    const p2 = polar(cx, cy, R, a2);
+    const d = 'M ' + p1.x.toFixed(1) + ' ' + p1.y.toFixed(1) + ' A ' + R + ' ' + R + ' 0 0 1 ' + p2.x.toFixed(1) + ' ' + p2.y.toFixed(1);
+    svg.appendChild(el('path', { d, fill:'none', stroke:'#4b5568', 'stroke-width':'1.5', 'marker-end':'url(#arrow)' }));
+  }
+
+  const pulse = el('circle', { r:'5', class:'pulse-dot' });
+  const motionPath = 'M ' + (cx + R) + ' ' + cy + ' A ' + R + ' ' + R + ' 0 1 1 ' + (cx - R) + ' ' + cy + ' A ' + R + ' ' + R + ' 0 1 1 ' + (cx + R) + ' ' + cy;
+  pulse.appendChild(el('animateMotion', { dur:'14s', repeatCount:'indefinite', path: motionPath }));
+  svg.appendChild(pulse);
+
+  svg.appendChild(el('text', { x:cx, y:cy - 6, 'text-anchor':'middle', class:'center-lbl' }, '\u21bb'));
+  svg.appendChild(el('text', { x:cx, y:cy + 16, 'text-anchor':'middle', class:'center-sub' }, 'continuous loop'));
+
+  flowSteps.forEach((step, i) => {
+    const angle = -90 + i * 45;
+    const p = polar(cx, cy, R, angle);
+    const g = el('g', { class:'node', tabindex:'0', role:'button', 'aria-label':step.label });
+    g.appendChild(el('circle', { class:'ring', cx:p.x.toFixed(1), cy:p.y.toFixed(1), r:nodeR }));
+    g.appendChild(el('text', { class:'num', x:p.x.toFixed(1), y:(p.y - 16).toFixed(1), 'text-anchor':'middle' }, '0' + (i + 1)));
+    g.appendChild(el('text', { class:'lbl', x:p.x.toFixed(1), y:(p.y + 8).toFixed(1), 'text-anchor':'middle' }, step.label));
+
+    const select = () => {
+      document.querySelectorAll('#flow-svg .node').forEach(n => n.classList.remove('active'));
+      g.classList.add('active');
+      selectDetail('flow-detail', (i + 1) + '. ' + step.label, step.desc);
+    };
+    g.addEventListener('click', select);
+    g.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); select(); } });
+    svg.appendChild(g);
+  });
+}
+
+function buildMind(){
+  const svg = document.getElementById('mind-svg');
+  const cx = 410, cy = 410, R = 300, hubR = 76, satR = 58;
+
+  mindLayers.forEach((layer, i) => {
+    const angle = -90 + i * (360 / 7);
+    const p = polar(cx, cy, R, angle);
+    svg.appendChild(el('line', { x1:cx, y1:cy, x2:p.x.toFixed(1), y2:p.y.toFixed(1), class:'spoke' }));
+  });
+
+  const hub = el('g', { class:'hub' });
+  hub.appendChild(el('circle', { cx, cy, r:hubR, class:'hub-ring' }));
+  hub.appendChild(el('text', { x:cx, y:cy - 4, 'text-anchor':'middle', class:'hub-lbl' }, 'EVA'));
+  hub.appendChild(el('text', { x:cx, y:cy + 16, 'text-anchor':'middle', class:'hub-sub' }, 'core'));
+  svg.appendChild(hub);
+
+  mindLayers.forEach((layer, i) => {
+    const angle = -90 + i * (360 / 7);
+    const p = polar(cx, cy, R, angle);
+    const g = el('g', { class:'node', tabindex:'0', role:'button', 'aria-label':layer.label });
+    g.appendChild(el('circle', { class:'ring', cx:p.x.toFixed(1), cy:p.y.toFixed(1), r:satR }));
+
+    const parts = layer.label.split(' & ');
+    if(parts.length === 2){
+      g.appendChild(el('text', { class:'lbl', x:p.x.toFixed(1), y:(p.y - 2).toFixed(1), 'text-anchor':'middle' }, parts[0] + ' &'));
+      g.appendChild(el('text', { class:'lbl', x:p.x.toFixed(1), y:(p.y + 14).toFixed(1), 'text-anchor':'middle' }, parts[1]));
+    } else {
+      g.appendChild(el('text', { class:'lbl', x:p.x.toFixed(1), y:(p.y + 6).toFixed(1), 'text-anchor':'middle' }, layer.label));
+    }
+
+    const select = () => {
+      document.querySelectorAll('#mind-svg .node').forEach(n => n.classList.remove('active'));
+      g.classList.add('active');
+      selectDetail('mind-detail', layer.label + ' layer', layer.desc);
+    };
+    g.addEventListener('click', select);
+    g.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); select(); } });
+    svg.appendChild(g);
+  });
+}
+
+buildFlow();
+buildMind();
+</script>
+</body>
+</html>
